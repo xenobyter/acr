@@ -19,18 +19,18 @@ del <Name> - löscht einen Helden`,
 	},
 }
 
-// addCmd represents the add command
-var addCmd = &cobra.Command{
+// heroAddCmd represents the add command
+var heroAddCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Legt einen neuen Helden an",
 	Long: `Zur Anlage eines neuen Helden wird ein Name angegeben.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		db.Write("heros", args[0], Heros{args[0]})
+		db.Write("heros", args[0], Hero{args[0]})
 	},
 }
 
-// delCmd represents the add command
-var delCmd = &cobra.Command{
+// heroDelCmd represents the add command
+var heroDelCmd = &cobra.Command{
 	Use:   "del",
 	Short: "Löscht einen Helden",
 	Long: `Zur Löschung eines Helden wird ein Name angegeben.`,
@@ -43,6 +43,6 @@ var delCmd = &cobra.Command{
 }
 func init() {
 	rootCmd.AddCommand(heroCmd)
-	heroCmd.AddCommand(addCmd)
-	heroCmd.AddCommand(delCmd)
+	heroCmd.AddCommand(heroAddCmd)
+	heroCmd.AddCommand(heroDelCmd)
 }

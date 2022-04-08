@@ -5,6 +5,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 
@@ -12,12 +13,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type Heros struct{ Name string }
+type Hero struct{ Name string }
+type Item struct{ 
+	Name string
+	Material map[string]int
+}
 
 var (
 	db     *scribble.Driver
-	dbFile string 
-	heros []string
+	dbFile string
+	heros  []Hero
+	items  []Item
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -28,7 +34,7 @@ var rootCmd = &cobra.Command{
 
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		initDB()
-	  },
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -62,5 +68,22 @@ func initDB() {
 	}
 
 	// Read heros from the database
-	heros, _ = db.ReadAll("heros")
+	records, _ := db.ReadAll("heros")
+	for _, f := range records {
+		hero := Hero{}
+		if err := json.Unmarshal([]byte(f), &hero); err != nil {
+			fmt.Println("Error", err)
+		}
+		heros = append(heros, hero)
+	}
+
+	// Read items from the database
+	records, _ = db.ReadAll("items")
+	for _, f := range records {
+		item := Item{}
+		if err := json.Unmarshal([]byte(f), &item); err != nil {
+			fmt.Println("Error", err)
+		}
+		items = append(items, item)
+	}
 }
