@@ -13,10 +13,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type Hero struct{ Name string }
-type Item struct{ 
-	Name string
+type Hero struct {
+	Name  string
+	Items []string
+}
+type Item struct {
+	Name     string
 	Material map[string]int
+}
+type Plan struct {
+	Hero  string
+	Items []string
 }
 
 var (
@@ -24,6 +31,7 @@ var (
 	dbFile string
 	heros  []Hero
 	items  []Item
+	plans  []Plan
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -86,4 +94,14 @@ func initDB() {
 		}
 		items = append(items, item)
 	}
+	// Read plans from the database
+	records, _ = db.ReadAll("plans")
+	for _, f := range records {
+		plan := Plan{}
+		if err := json.Unmarshal([]byte(f), &plan); err != nil {
+			fmt.Println("Error", err)
+		}
+		plans = append(plans, plan)
+	}
+
 }

@@ -25,7 +25,7 @@ var heroAddCmd = &cobra.Command{
 	Short: "Legt einen neuen Helden an",
 	Long: `Zur Anlage eines neuen Helden wird ein Name angegeben.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		db.Write("heros", args[0], Hero{args[0]})
+		db.Write("heros", args[0], Hero{args[0], []string{}})
 	},
 }
 
