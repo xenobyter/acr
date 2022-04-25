@@ -14,7 +14,8 @@ var planCmd = &cobra.Command{
 unterstützt die folgenden Parameter:
 add <Name> - fügt einen neuen Plan hinzu
 del <Name> - löscht einen Plan
-finish <Name> - beendet einen Plan, fügt den Gegenstand seinem Helden hinzu`,
+finish <Name> - beendet einen Plan, fügt den Gegenstand seinem Helden hinzu
+sum - gibt die benötigen Materialien für alle Pläne aus`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(plans)
 	},
@@ -65,9 +66,34 @@ var planFinishCmd = &cobra.Command{
 	},
 }
 
+// planSumCmd represents the finish command
+var planSumCmd = &cobra.Command{
+	Use:   "sum",
+	Short: "Summiert alle Pläne und gibt die benötigten Materialien aus.",
+	Long:  `Summiert alle Pläne und gibt die benötigten Materialien aus.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		sum:= make(map[string]int)
+		for _, p := range plans {
+			for _, i := range p.Items {
+				for name, amount := range getItem(i).Material {
+					if a, ok:= sum[name]; ok {
+						sum[name] = a + amount
+					} else {
+						sum[name] = amount
+					}
+				}
+			}
+		}
+		for name, amount := range sum {
+			fmt.Printf("%s: %d\n", name, amount)
+		}
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(planCmd)
 	planCmd.AddCommand(planAddCmd)
 	planCmd.AddCommand(planDelCmd)
 	planCmd.AddCommand(planFinishCmd)
+	planCmd.AddCommand(planSumCmd)
 }

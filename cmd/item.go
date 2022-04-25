@@ -59,3 +59,12 @@ func init() {
 	itemCmd.AddCommand(itemAddCmd)
 	itemCmd.AddCommand(itemDelCmd)
 }
+
+func getItem(name string) Item {
+	for _, record := range items {
+		if record.Name == name {
+			return record
+		}
+	}
+	return Item{}
+}
